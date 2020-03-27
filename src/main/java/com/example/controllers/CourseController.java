@@ -5,6 +5,8 @@ import com.example.exceptions.InvalidPaginationParameterException;
 import com.example.entities.Course;
 import com.example.services.CourseService;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,12 +43,12 @@ public class CourseController {
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/")
-  public Course create(@RequestBody Course course) {
+  public Course create(@Valid @RequestBody Course course) {
     return courseService.create(course);
   }
 
   @PutMapping("/{courseId}")
-  public Course update(@PathVariable Long courseId, @RequestBody Course course) throws CourseNotFoundException {
+  public Course update(@PathVariable Long courseId, @Valid @RequestBody Course course) throws CourseNotFoundException {
     course.setId(courseId);
     return courseService.update(course);
   }
