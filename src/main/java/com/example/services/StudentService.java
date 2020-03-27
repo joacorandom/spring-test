@@ -1,8 +1,11 @@
 package com.example.services;
 
 import com.example.exceptions.StudentNotFoundException;
+import com.example.exceptions.CourseNotFoundException;
 import com.example.exceptions.InvalidPaginationParameterException;
+import com.example.entities.Course;
 import com.example.entities.Student;
+import com.example.repositories.CourseRepository;
 import com.example.repositories.StudentRepository;
 
 import java.util.Optional;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentService {
 
+  @Autowired
+  private CourseRepository courseRepository;
   @Autowired
   private StudentRepository studentRepository;
 
@@ -50,7 +55,7 @@ public class StudentService {
    */
   public Student findById(Long studentId) throws StudentNotFoundException {
     Optional<Student> student = studentRepository.findById(studentId);
-    if (student.isPresent()) {
+    if (!student.isPresent()) {
       throw new StudentNotFoundException(studentId);
     }
     return student.get();
@@ -60,8 +65,10 @@ public class StudentService {
    * 
    * @param student
    */
-  public void create(Student student) {
-    studentRepository.save(student);
+  public Student create(Student student) throws CourseNotFoundException {
+    Course course = getCourse(student.getCourse().getId());
+    student.setCourse(course);
+    return studentRepository.save(student);
   }
 
   /**
@@ -69,8 +76,11 @@ public class StudentService {
    * @param student
    * @throws StudentNotFoundException
    */
-  public void update(Student student) throws StudentNotFoundException {
+  public Student update(Student student) throws CourseNotFoundException, StudentNotFoundException {
     Student updateStudent = this.findById(student.getId());
+
+    Course course = getCourse(student.getCourse().getId());
+    updateStudent.setCourse(course);
 
     updateStudent.setAge(student.getAge());
     updateStudent.setCourse(student.getCourse());
@@ -78,7 +88,7 @@ public class StudentService {
     updateStudent.setName(student.getName());
     updateStudent.setRut(student.getRut());
 
-    studentRepository.save(updateStudent);
+    return studentRepository.save(updateStudent);
   }
 
   /**
@@ -89,5 +99,13 @@ public class StudentService {
   public void delete(Long studentId) throws StudentNotFoundException {
     Student student = this.findById(studentId);
     studentRepository.delete(student);
+  }
+
+  private Course getCourse(Long courseId) throws CourseNotFoundException {
+    Optional<Course> course = courseRepository.findById(courseId);
+    if (!course.isPresent()) {
+      throw new CourseNotFoundException(courseId);
+    }
+    return course.get();
   }
 }

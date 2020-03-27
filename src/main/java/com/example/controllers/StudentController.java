@@ -1,6 +1,7 @@
 package com.example.controllers;
 
 import com.example.exceptions.StudentNotFoundException;
+import com.example.exceptions.CourseNotFoundException;
 import com.example.exceptions.InvalidPaginationParameterException;
 import com.example.entities.Student;
 import com.example.services.StudentService;
@@ -40,15 +41,16 @@ public class StudentController {
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
-  @PostMapping("/{studentId}")
-  public void create(@RequestBody Student student) {
-    studentService.create(student);
+  @PostMapping("/")
+  public Student create(@RequestBody Student student) throws CourseNotFoundException {
+    return studentService.create(student);
   }
 
   @PutMapping("/{studentId}")
-  public void update(@PathVariable Long studentId, @RequestBody Student student) throws StudentNotFoundException {
+  public Student update(@PathVariable Long studentId, @RequestBody Student student)
+      throws CourseNotFoundException, StudentNotFoundException {
     student.setId(studentId);
-    studentService.update(student);
+    return studentService.update(student);
   }
 
   @DeleteMapping("/{studentId}")

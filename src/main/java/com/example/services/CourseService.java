@@ -49,7 +49,7 @@ public class CourseService {
    */
   public Course findById(Long courseId) throws CourseNotFoundException {
     Optional<Course> course = courseRepository.findById(courseId);
-    if (course.isPresent()) {
+    if (!course.isPresent()) {
       throw new CourseNotFoundException(courseId);
     }
     return course.get();
@@ -59,16 +59,16 @@ public class CourseService {
    * 
    * @param course the course to save in the database
    */
-  public void create(Course course) {
-    courseRepository.save(course);
+  public Course create(Course course) {
+    return courseRepository.save(course);
   }
 
-  public void update(Course course) throws CourseNotFoundException {
+  public Course update(Course course) throws CourseNotFoundException {
     Course updateCourse = this.findById(course.getId());
     updateCourse.setCode(course.getCode());
     updateCourse.setName(course.getName());
 
-    courseRepository.save(updateCourse);
+    return courseRepository.save(updateCourse);
   }
 
   /**

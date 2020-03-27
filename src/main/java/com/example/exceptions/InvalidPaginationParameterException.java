@@ -11,6 +11,6 @@ public class InvalidPaginationParameterException extends Exception {
    * This exception is used when wrong pagination values are send
    */
   public InvalidPaginationParameterException() {
-    super("Pagination parameters should be integers greater than zero");
+    super("Pagination parameters should be positive integers or zero");
   }
 }

@@ -1,25 +1,32 @@
 package com.example.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GenerationType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "course")
 public class Course {
-  @Id
+  @Column(name = "course_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Id
   private Long id;
 
-  @Size(max = 4, message = "Name must have a maximum length of 4")
+  @Column(name = "name")
   @NotBlank(message = "Name is mandatory")
+  @NotNull
+  @Size(max = 4, message = "Name must have a maximum length of 4")
   private String name;
 
+  @Column(name = "code")
   @NotBlank(message = "Code is mandatory")
+  @NotNull
   private String code;
 
   public Course() {

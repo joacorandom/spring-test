@@ -1,28 +1,48 @@
 package com.example.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GenerationType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "student")
 public class Student {
-  @Id
+  @Column(name = "student_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Id
   private Long id;
+
   // TODO: Add custom RUT validator
+  @Column(name = "rut")
   @NotBlank(message = "RUT is mandatory")
+  @NotNull
   private String rut;
+  @Column(name = "name")
   @NotBlank(message = "Name is mandatory")
+  @NotNull
+
   private String name;
+  @Column(name = "last_name")
   @NotBlank(message = "LastName is mandatory")
+  @NotNull
+
   private String lastName;
+  @Column(name = "age")
   @Min(value = 18, message = "Age should not be less than 18")
+  @NotNull
   private int age;
+
+  @ManyToOne
+  @NotNull
+  @JoinColumn(name = "course_id")
   private Course course;
 
   public Student() {

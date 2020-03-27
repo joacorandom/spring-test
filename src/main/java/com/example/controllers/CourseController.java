@@ -40,15 +40,15 @@ public class CourseController {
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
-  @PostMapping("/{courseId}")
-  public void create(@RequestBody Course course) {
-    courseService.create(course);
+  @PostMapping("/")
+  public Course create(@RequestBody Course course) {
+    return courseService.create(course);
   }
 
   @PutMapping("/{courseId}")
-  public void update(@PathVariable Long courseId, @RequestBody Course course) throws CourseNotFoundException {
+  public Course update(@PathVariable Long courseId, @RequestBody Course course) throws CourseNotFoundException {
     course.setId(courseId);
-    courseService.update(course);
+    return courseService.update(course);
   }
 
   @DeleteMapping("/{courseId}")
