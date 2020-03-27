@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController {
 
   @GetMapping("/")
-  public String getPages() {
+  public String get() {
     return null;
   }
 }
