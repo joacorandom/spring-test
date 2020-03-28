@@ -1,5 +1,7 @@
 package com.example.entities;
 
+import com.example.validation.RUTConstraint;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GenerationType;
@@ -20,10 +22,10 @@ public class Student {
   @Id
   private Long id;
 
-  // TODO: Add custom RUT validator
   @Column(name = "rut")
   @NotBlank(message = "RUT is mandatory")
   @NotNull
+  @RUTConstraint
   private String rut;
   @Column(name = "name")
   @NotBlank(message = "Name is mandatory")

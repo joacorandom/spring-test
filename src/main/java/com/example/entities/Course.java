@@ -21,12 +21,12 @@ public class Course {
   @Column(name = "name")
   @NotBlank(message = "Name is mandatory")
   @NotNull
-  @Size(max = 4, message = "Name must have a maximum length of 4")
   private String name;
 
   @Column(name = "code")
   @NotBlank(message = "Code is mandatory")
   @NotNull
+  @Size(max = 4, message = "Code must have a maximum length of 4")
   private String code;
 
   public Course() {
