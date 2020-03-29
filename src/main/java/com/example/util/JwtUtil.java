@@ -8,8 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtUtil {
-  private final static String JWT_SECRET = System.getenv("JWT_SECRET") != null ? System.getenv("JWT_SECRET")
-      : "56a7010456b474aeee111f3b7336581fb0a99129d426cf51903efbdfd629f008";
+  private final static String JWT_SECRET = System.getenv().getOrDefault("JWT_SECRET",
+      "56a7010456b474aeee111f3b7336581fb0a99129d426cf51903efbdfd629f008");
   private final static long JWT_EXPIRATION = 600_000;
 
   public static Claims getClaims(String token) {
