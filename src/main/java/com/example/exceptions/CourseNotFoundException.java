@@ -14,6 +14,6 @@ public class CourseNotFoundException extends Exception {
    * @param courseId The id of the course that was not found
    */
   public CourseNotFoundException(Long courseId) {
-    super("The course with id: '" + courseId + "' was not found");
+    super("The course with id: '" + courseId + "', was not found");
   }
 }
