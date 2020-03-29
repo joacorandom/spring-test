@@ -1,8 +1,10 @@
 package com.example.controllers;
 
-import com.example.services.TokenService;
+import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.util.JwtUtil;
+import com.example.util.RemoteAddressUtil;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/token")
 public class TokenController {
 
-  @Autowired
-  private TokenService tokenService;
-
   @GetMapping("/")
-  public String get() {
-    return tokenService.generateToken();
+  public String get(HttpServletRequest request) {
+    String remoteAddress = RemoteAddressUtil.get(request);
+    return JwtUtil.generateToken(remoteAddress);
   }
 }

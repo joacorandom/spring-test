@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.exceptions.TokenNotProvidedException;
-import com.example.services.TokenService;
+import com.example.util.JwtUtil;
+import com.example.util.RemoteAddressUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,12 +25,8 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private TokenService tokenService;
-
   private final String HEADER = "Authorization";
   private final String PREFIX = "Bearer ";
-  private final String SECRET = "56a7010456b474aeee111f3b7336581fb0a99129d426cf51903efbdfd629f008";
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -37,8 +34,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     try {
       if (!"/token/".equals(request.getRequestURI())) {
         String token = getTokenFromHeader(request);
-        if (tokenIsValid(token, request)) {
-          Claims claims = tokenService.getClaims(token);
+        String remoteAddress = RemoteAddressUtil.get(request);
+
+        if (JwtUtil.tokenIsValid(token, remoteAddress)) {
+          Claims claims = JwtUtil.getClaims(token);
 
           UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null);
           SecurityContextHolder.getContext().setAuthentication(auth);
@@ -60,29 +59,4 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       throw new TokenNotProvidedException();
     return authenticationHeader.replace(PREFIX, "");
   }
-
-  public Claims getClaims(String token) {
-    return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
-  }
-
-  private boolean tokenIsValid(String token, HttpServletRequest request) {
-    Claims claims = getClaims(token);
-    String subject = claims.getSubject();
-    Instant expiration = claims.getExpiration().toInstant();
-
-    String remoteAddress = getRemoteAddress(request);
-    return remoteAddress.equals(subject) && Instant.now().compareTo(expiration) > 0;
-  }
-
-  private String getRemoteAddress(HttpServletRequest request) {
-    String remoteAddr = "";
-    if (request != null) {
-      remoteAddr = request.getHeader("X-FORWARDED-FOR");
-      if (remoteAddr == null || "".equals(remoteAddr)) {
-        remoteAddr = request.getRemoteAddr();
-      }
-    }
-    return remoteAddr;
-  }
-
 }
