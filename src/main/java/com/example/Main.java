@@ -24,8 +24,8 @@ public class Main {
   class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-      http.addFilterAfter(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class).authorizeRequests()
-          .antMatchers("*").authenticated();
+      http.antMatcher("*/*").addFilterAfter(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+          .authorizeRequests().antMatchers("*/*").authenticated();
     }
 
     @Override
